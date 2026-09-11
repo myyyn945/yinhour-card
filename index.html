@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>杨鹏 · 寅时智能</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
+    background: #0a0e1a;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 24px 12px 40px;
+    color: #e8eaf6;
+  }
+
+  /* 背景粒子 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 10%, rgba(0,180,220,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 80% 80%, rgba(120,0,255,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    background: linear-gradient(165deg, rgba(20,26,50,0.97) 0%, rgba(12,16,32,0.99) 100%);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  }
+
+  /* 顶部装饰条 */
+  .card-top {
+    height: 6px;
+    background: linear-gradient(90deg, #00b4dc, #7b2fff, #00b4dc);
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+  }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+  /* 头像区 */
+  .header {
+    text-align: center;
+    padding: 32px 24px 24px;
+    position: relative;
+  }
+  .avatar-ring {
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    background: conic-gradient(from 180deg, #00b4dc, #7b2fff, #00b4dc);
+    padding: 3px;
+    margin: 0 auto 16px;
+    animation: spin 6s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .avatar {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: #141a2e;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; font-weight: 700; color: #00b4dc;
+    border: 3px solid #0a0e1a;
+  }
+  .name { font-size: 24px; font-weight: 700; letter-spacing: 2px; color: #fff; }
+  .title { font-size: 13px; color: #00b4dc; margin-top: 4px; letter-spacing: 1px; }
+  .company { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 6px; line-height: 1.5; }
+
+  /* 分隔线 */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,180,220,0.3), rgba(123,47,255,0.3), transparent);
+    margin: 0 28px;
+  }
+
+  /* 简介 */
+  .section { padding: 20px 24px; }
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(0,180,220,0.7);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .intro {
+    font-size: 13.5px;
+    line-height: 1.85;
+    color: rgba(255,255,255,0.7);
+    text-align: justify;
+  }
+
+  /* 服务领域 */
+  .services { padding: 0 24px 20px; }
+  .service-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .service-item:hover { border-color: rgba(0,180,220,0.3); }
+  .service-item:last-child { margin-bottom: 0; }
+  .service-name {
+    font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .service-dot {
+    width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+  }
+  .service-desc {
+    font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.7; padding-left: 14px;
+  }
+
+  /* 联系区 */
+  .contact { padding: 20px 24px 28px; }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .contact-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 12px 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    color: rgba(255,255,255,0.8);
+    font-size: 13px;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .contact-btn:hover {
+    border-color: rgba(0,180,220,0.4);
+    background: rgba(0,180,220,0.08);
+    color: #fff;
+  }
+  .contact-btn.primary {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, rgba(0,180,220,0.2), rgba(123,47,255,0.2));
+    border-color: rgba(0,180,220,0.3);
+    color: #fff;
+    font-weight: 600;
+  }
+  .contact-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  /* 微信二维码 */
+  .wechat-box {
+    text-align: center;
+    padding: 20px;
+    background: rgba(255,255,255,0.02);
+    border: 1px dashed rgba(255,255,255,0.1);
+    border-radius: 14px;
+  }
+  .wechat-box p { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 12px; }
+  .qr-placeholder {
+    width: 130px; height: 130px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .qr-placeholder img { width: 100%; height: 100%; object-fit: contain; }
+  .wechat-id { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 10px; }
+
+  /* 底部 */
+  .footer {
+    text-align: center;
+    padding: 0 24px 20px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="card-top"></div>
+
+  <!-- 头像 -->
+  <div class="header">
+    <div class="avatar-ring">
+      <div class="avatar">鹏</div>
+    </div>
+    <div class="name">杨 鹏</div>
+    <div class="title">总经理</div>
+    <div class="company">成都市寅时智能科技有限责任公司</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 简介 -->
+  <div class="section">
+    <div class="section-label">关于我们</div>
+    <p class="intro">
+      寅时智能面向工业制造、科研研发、商用车、水产检测、医疗质评等专业场景，提供人工智能算法、软件平台、数据治理、智能硬件与系统集成服务。聚焦"AI能力工程化、行业知识结构化、业务流程智能化"，帮助客户将数据、专业经验、检测设备和业务流程连接起来，形成可验证、可追溯、可持续优化的智能化能力。
+    </p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 服务领域 -->
+  <div class="services">
+    <div class="section-label" style="padding: 16px 0 10px;">核心业务</div>
+
+    <div class="service-item">
+      <div class="service-name">
+        <span class="service-dot" style="background:#00b4dc;"></span>
+        智能视觉与算法应用
+      </div>
+      <div class="service-desc">工业图像检测、缺陷识别与位置标记 · 显微图像分析、细胞识别分类计数</div>
+    </div>
+
+    <div class="service-item">
+      <div class="service-name">
+        <span class="service-dot" style="background:#7b2fff;"></span>
+        软件平台与数据系统
+      </div>
+      <div class="service-desc">数据采集 · 样本管理 · 标注与质量控制 · 私有化/混合/指定环境部署</div>
+    </div>
+
+    <div class="service-item">
+      <div class="service-name">
+        <span class="service-dot" style="background:#ff6b35;"></span>
+        智能硬件与系统集成
+      </div>
+      <div class="service-desc">工业/显微成像 · 相机镜头光源运动控制 · 算法设备与业务系统联调</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 联系方式 -->
+  <div class="contact">
+    <div class="section-label">联系方式</div>
+    <div class="contact-grid">
+      <a class="contact-btn primary" href="tel:13608189969">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.69 12 19.79 19.79 0 011.62 3.38 2 2 0 013.59 1h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L7.91 8.89a16 16 0 006.59 6.59l1.25-1.25a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        13608189969
+      </a>
+      <a class="contact-btn" href="mailto:yangpeng@yinhour.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        邮件联系
+      </a>
+      <a class="contact-btn" href="https://weixin.sogou.com/weixin?type=2&query=yinyan945" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.294.294 0 00.152-.054l1.852-1.073a.864.864 0 01.717-.095 10.16 10.16 0 002.837.403c.276 0 .543-.027.811-.05a6.127 6.127 0 01-.253-1.735c0-3.675 3.293-6.656 7.354-6.656.246 0 .486.013.724.032C16.273 5.134 12.842 2.188 8.691 2.188zm-2.6 4.408c.56 0 1.016.454 1.016 1.016 0 .56-.455 1.016-1.016 1.016a1.017 1.017 0 01-1.016-1.016c0-.562.456-1.016 1.016-1.016zm5.22 0c.56 0 1.015.454 1.015 1.016 0 .56-.455 1.016-1.015 1.016a1.017 1.017 0 01-1.016-1.016c0-.562.455-1.016 1.016-1.016zm4.548 3.622c-3.627 0-6.57 2.604-6.57 5.816 0 3.213 2.943 5.817 6.57 5.817.88 0 1.723-.16 2.492-.446a.715.715 0 01.592.08l1.484.857a.265.265 0 00.14.05.27.27 0 00.27-.27c0-.067-.026-.132-.043-.198l-.305-1.156a.538.538 0 01.194-.605C21.716 19.635 22.6 18.044 22.6 16.27v-.002c0-3.21-2.945-5.816-6.571-5.816h-.008zm-2.278 3.18c.466 0 .844.378.844.845 0 .466-.378.844-.844.844a.845.845 0 01-.845-.844c0-.467.379-.845.845-.845zm4.557 0c.467 0 .845.378.845.845 0 .466-.379.844-.845.844a.845.845 0 01-.844-.844c0-.467.378-.845.844-.845z"/></svg>
+        微信联系
+      </a>
+    </div>
+
+    <!-- 二维码区域 -->
+    <div class="wechat-box">
+      <p>扫码添加微信</p>
+      <div class="qr-placeholder">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=yinyan945&bgcolor=ffffff&color=0a0e1a" alt="微信二维码" onerror="this.parentElement.innerHTML='<span style=\\'color:#0a0e1a;font-size:12px;padding:10px;text-align:center;display:block\\'>微信号<br><b>yinyan945</b></span>'">
+      </div>
+      <div class="wechat-id">微信号：yinyan945</div>
+    </div>
+  </div>
+
+  <div class="footer">© 寅时智能 YinHour Intelligence</div>
+</div>
+
+</body>
+</html>
